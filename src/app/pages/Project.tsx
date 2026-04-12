@@ -39,13 +39,16 @@ export function Project() {
       githubUrl: "private"
     },
     {
-      id: "weather-app",
-      title: "Weather Forecast Application",
-      shortDescription: "A beautiful weather application providing accurate forecasts, radar maps, and severe weather alerts globally.",
-      tech: ["React", "API", "Framer Motion"],
-      image: "https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      liveUrl: "#",
-      githubUrl: "#"
+      id: "portfolio-web",
+      title: "Interactive Web Portfolio & Dashboard",
+      shortDescription: "Personal portfolio website featuring real-time GitHub stats and WakaTime coding activity integrations.",
+      descriptionKey: "project_portfolio_desc",
+      featuresKey: "project_portfolio_features",
+      techKey: "project_portfolio_tech_desc",
+      tech: ["React", "TailwindCSS", "API Integration"],
+      image: "https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      liveUrl: "http://localhost:5173",
+      githubUrl: "https://github.com/sulistiorommy/portofolio"
     }
   ];
 

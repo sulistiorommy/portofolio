@@ -33,4 +33,14 @@ export default defineConfig({
 
   // File types to support raw imports. Never add .css, .tsx, or .ts files to this.
   assetsInclude: ['**/*.svg', '**/*.csv'],
+
+  server: {
+    proxy: {
+      '/api/wakatime': {
+        target: 'https://wakatime.com/api/v1',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/wakatime/, ''),
+      },
+    },
+  },
 })

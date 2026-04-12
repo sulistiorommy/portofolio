@@ -26,6 +26,14 @@ export function Home() {
           >
             {t('project')} <ArrowRight size={18} />
           </Link>
+          <a 
+            href="/cv-rommy-sulistio.pdf" 
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 bg-blue-50 hover:bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 dark:text-blue-300 px-6 py-3 rounded-xl font-medium transition-all shadow-sm border border-blue-200 dark:border-blue-800"
+          >
+            Download CV
+          </a>
           <Link 
             to="/contact"
             className="inline-flex items-center gap-2 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-900 dark:text-white px-6 py-3 rounded-xl font-medium transition-all shadow-sm border border-slate-200 dark:border-slate-700"

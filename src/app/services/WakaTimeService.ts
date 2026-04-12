@@ -1,23 +1,59 @@
-const WAKATIME_USERNAME = 'sulistiorommy'; // Ideally this can be dynamic
 const WAKATIME_API_KEY = import.meta.env.VITE_WAKATIME_API_KEY;
 
 export const WakaTimeService = {
   async getStats() {
-    // Note: WakaTime API usually requires CORS handling if called directly from browser.
-    // If it fails, we might need a backup or inform the user about CORS.
-    // For many, using the public JSON export or a serverless function is preferred.
     try {
-      const response = await fetch(`https://wakatime.com/api/v1/users/${WAKATIME_USERNAME}/stats/last_7_days`);
-      if (!response.ok) {
-        // Fallback or error
-        console.warn('Wakatime API call failed (likely CORS). Using mock data for development.');
+      if (!WAKATIME_API_KEY) {
+        console.warn('WakaTime API Key missing. Using mock data.');
         return this.getMockData();
       }
-      return response.json();
+
+      // Using the local Vite proxy set up in vite.config.ts
+      // This bypasses CORS and preserves authentication headers
+      const proxyUrl = `/api/wakatime/users/current/summaries?range=last_7_days`;
+      
+      const response = await fetch(proxyUrl, {
+        headers: {
+          'Authorization': `Basic ${btoa(WAKATIME_API_KEY + ':')}`,
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`WakaTime API Error: ${response.status}`);
+      }
+
+      const rawData = await response.json();
+      return this.formatSummariesData(rawData);
     } catch (error) {
-      console.error('WakaTime Error:', error);
+      console.error('WakaTime Fetch Error:', error);
       return this.getMockData();
     }
+  },
+
+  formatSummariesData(rawData: any) {
+    if (!rawData || !rawData.data) return this.getMockData();
+
+    const activity = rawData.data.map((day: any) => {
+      const dateObj = new Date(day.range.date);
+      return {
+        day: dateObj.toLocaleDateString('en-US', { weekday: 'short' }), // "Mon"
+        date: dateObj.toLocaleDateString('en-US', { day: '2-digit', month: 'short' }), // "12 Apr"
+        fullDate: day.range.text, // "Sunday, April 12, 2026"
+        hours: parseFloat(day.grand_total.decimal)
+      };
+    });
+
+    return {
+      data: {
+        human_readable_total: rawData.cumulative_total.text,
+        daily_average: rawData.daily_average.text,
+        activity,
+        // Since summaries endpoint doesn't give languages/editors in the basic range call 
+        // as easily as stats, we provide fallbacks or empty for now, or the user can expand this.
+        languages: this.getMockData().data.languages, 
+        editors: this.getMockData().data.editors
+      }
+    };
   },
 
   getMockData() {
@@ -34,6 +70,15 @@ export const WakaTimeService = {
         editors: [
           { name: "VS Code", percent: 85.0 },
           { name: "Antigravity AI", percent: 15.0 }
+        ],
+        activity: [
+          { day: "Mon", date: "06 Apr", hours: 4.2 },
+          { day: "Tue", date: "07 Apr", hours: 3.8 },
+          { day: "Wed", date: "08 Apr", hours: 5.1 },
+          { day: "Thu", date: "09 Apr", hours: 4.5 },
+          { day: "Fri", date: "10 Apr", hours: 6.2 },
+          { day: "Sat", date: "11 Apr", hours: 2.5 },
+          { day: "Sun", date: "12 Apr", hours: 3.1 }
         ]
       }
     };
