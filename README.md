@@ -1,11 +1,15 @@
+Repository ini berisi source code untuk halaman portofolio personal saya. Proyek ini dikembangkan dengan pendekatan AI-assisted development untuk mempercepat pembuatan kerangka UI, yang kemudian disesuaikan dan dioptimasi secara manual menggunakan React dan Tailwind CSS.
 
-  # Halaman Portofolio Web Dev
+Tech Stack:
 
-  This is a code bundle for Halaman Portofolio Web Dev. The original project is available at https://www.figma.com/design/CA9jFp6RxgXjyYd8WpLd75/Halaman-Portofolio-Web-Dev.
+React.js & Vite
 
-  ## Running the code
+Tailwind CSS
 
-  Run `npm i` to install the dependencies.
+Fitur & Optimasi yang Dilakukan:
 
-  Run `npm run dev` to start the development server.
-  
+Implementasi state management untuk toggle Bahasa (ID/EN) dan Dark/Light mode.
+
+Optimasi struktur komponen React agar lebih reusable dan rapi.
+
+Konfigurasi deployment CI/CD menggunakan Vercel.
