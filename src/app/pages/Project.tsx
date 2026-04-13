@@ -22,7 +22,7 @@ export function Project() {
       featuresKey: "project_moss_wall_features",
       techKey: "project_moss_wall_tech_desc",
       tech: ["HTML", "CSS", "Javascript"],
-      image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      image: "/project/Moss_Wall.png",
       liveUrl: "https://splendorous-beignet-cb79c2.netlify.app/",
       githubUrl: "https://github.com/sulistiorommy/tes.git"
     },
@@ -46,7 +46,7 @@ export function Project() {
       featuresKey: "project_portfolio_features",
       techKey: "project_portfolio_tech_desc",
       tech: ["React", "TailwindCSS", "API Integration"],
-      image: "https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      image: "/project/portofolio.png",
       liveUrl: "http://localhost:5173",
       githubUrl: "https://github.com/sulistiorommy/portofolio"
     }

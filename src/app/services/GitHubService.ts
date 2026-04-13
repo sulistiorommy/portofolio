@@ -91,9 +91,6 @@ export const GitHubService = {
     }
   },
 
-  async getUserRepos() {
-    const response = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`, { headers });
-    if (!response.ok) throw new Error('Failed to fetch GitHub repos');
-    return response.json();
-  }
 };
+
+// Re-export specific interfaces if needed later.
