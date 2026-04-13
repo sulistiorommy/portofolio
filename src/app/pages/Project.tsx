@@ -47,7 +47,7 @@ export function Project() {
       techKey: "project_portfolio_tech_desc",
       tech: ["React", "TailwindCSS", "API Integration"],
       image: "/project/portofolio.png",
-      liveUrl: "http://localhost:5173",
+      liveUrl: "https://portofolio-liard-zeta.vercel.app/",
       githubUrl: "https://github.com/sulistiorommy/portofolio"
     }
   ];
@@ -64,13 +64,13 @@ export function Project() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {projects.map((project, index) => (
           <Dialog key={index}>
-            <div 
+            <div
               className="group flex flex-col bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-800 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
             >
               <div className="relative h-48 overflow-hidden bg-slate-100 dark:bg-slate-800">
-                <img 
-                  src={project.image} 
-                  alt={project.title} 
+                <img
+                  src={project.image}
+                  alt={project.title}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
@@ -81,17 +81,17 @@ export function Project() {
                   </DialogTrigger>
                 </div>
               </div>
-              
+
               <div className="flex flex-col flex-1 p-6">
                 <div className="flex items-center gap-2 mb-3">
                   <Folder size={18} className="text-blue-500" />
                   <h3 className="text-xl font-bold text-slate-900 dark:text-white line-clamp-1">{project.title}</h3>
                 </div>
-                
+
                 <p className="text-slate-600 dark:text-slate-400 text-sm mb-4 line-clamp-2 flex-1">
                   {project.shortDescription}
                 </p>
-                
+
                 <div className="flex flex-wrap gap-2 mb-6">
                   {project.tech.map((tech, i) => (
                     <Badge key={i} variant="secondary" className="bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 border-none">
@@ -99,15 +99,15 @@ export function Project() {
                     </Badge>
                   ))}
                 </div>
-                
+
                 <div className="flex items-center gap-4 mt-auto pt-4 border-t border-slate-100 dark:border-slate-800">
                   {project.githubUrl === "private" ? (
                     <span className="flex items-center gap-2 text-xs font-semibold text-slate-400 cursor-not-allowed">
                       <Github size={16} /> Private
                     </span>
                   ) : (
-                    <a 
-                      href={project.githubUrl} 
+                    <a
+                      href={project.githubUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors"
@@ -115,14 +115,14 @@ export function Project() {
                       <Github size={16} /> Code
                     </a>
                   )}
-                  
+
                   {project.liveUrl === "private" ? (
                     <span className="flex items-center gap-2 text-xs font-semibold text-slate-400 cursor-not-allowed">
                       <ExternalLink size={16} /> Internal
                     </span>
                   ) : (
-                    <a 
-                      href={project.liveUrl} 
+                    <a
+                      href={project.liveUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 transition-colors"
@@ -137,7 +137,7 @@ export function Project() {
             <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle className="text-2xl font-bold">{project.title}</DialogTitle>
-                <DialogDescription className="text-blue-600 dark:text-blue-400 font-medium">
+                <DialogDescription className="text-slate-900 dark:text-slate-400 font-medium">
                   Project Details & Roadmap
                 </DialogDescription>
               </DialogHeader>
@@ -178,8 +178,8 @@ export function Project() {
                   {project.githubUrl === "private" ? (
                     <Badge variant="outline" className="text-slate-400 border-slate-200 py-2 px-4 h-9">Private Repository</Badge>
                   ) : (
-                    <a 
-                      href={project.githubUrl} 
+                    <a
+                      href={project.githubUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center justify-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition-opacity"
@@ -191,8 +191,8 @@ export function Project() {
                   {project.liveUrl === "private" ? (
                     <Badge variant="outline" className="text-slate-400 border-slate-200 py-2 px-4 h-9">Internal System Only</Badge>
                   ) : (
-                    <a 
-                      href={project.liveUrl} 
+                    <a
+                      href={project.liveUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
