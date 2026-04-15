@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useAppContext } from "../context/AppContext";
 import { GitHubService } from "../services/GitHubService";
 import { WakaTimeService } from "../services/WakaTimeService";
+import { UmamiService } from "../services/UmamiService";
 import { motion } from "framer-motion";
 import { GitHubCalendar } from "react-github-calendar";
 import { 
@@ -15,7 +16,13 @@ import {
   ExternalLink,
   BookOpen,
   Star,
-  GitBranch
+  GitBranch,
+  Eye,
+  MousePointerClick,
+  Globe,
+  TrendingUp,
+  FileText,
+  Share2
 } from "lucide-react";
 import { 
   BarChart, 
@@ -29,24 +36,60 @@ import {
   YAxis
 } from "recharts";
 
+const UmamiLogo = ({ className = "" }) => (
+  <svg 
+    width="24" 
+    height="24" 
+    viewBox="0 0 40 40" 
+    fill="none" 
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
+    {/* Handle (Top Arc) */}
+    <path 
+      d="M8 20C8 13.3726 13.3726 8 20 8C26.6274 8 32 13.3726 32 20" 
+      stroke="currentColor" 
+      strokeWidth="3" 
+      strokeLinecap="round"
+    />
+    {/* Bowl (Bottom Solid) */}
+    <path 
+      d="M8 20C8 26.6274 13.3726 32 20 32C26.6274 32 32 26.6274 32 20H8Z" 
+      fill="currentColor"
+    />
+  </svg>
+);
+
 export function Dashboard() {
   const { t, theme } = useAppContext();
   const [profile, setProfile] = useState<any>(null);
   const [commits, setCommits] = useState<any[]>([]);
   const [wakaStats, setWakaStats] = useState<any>(null);
+  const [umamiStats, setUmamiStats] = useState<any>(null);
+  const [umamiLocations, setUmamiLocations] = useState<any[]>([]);
+  const [umamiPages, setUmamiPages] = useState<any[]>([]);
+  const [umamiReferrers, setUmamiReferrers] = useState<any[]>([]);
+  const [umamiChartData, setUmamiChartData] = useState<any[]>([]);
+  const [chartView, setChartView] = useState<'7d' | '12m'>('7d');
   const [commitActivity, setCommitActivity] = useState<any[]>([]);
   const [totalStars, setTotalStars] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [fetchingChart, setFetchingChart] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
       try {
         setLoading(true);
-        const [profileData, commitData, wakaData, reposData, activityData] = await Promise.all([
+        const [profileData, commitData, wakaData, umamiData, locationsData, pagesData, referrersData, chartData, reposData, activityData] = await Promise.all([
           GitHubService.getUserProfile(),
           GitHubService.getRecentCommits(3),
           WakaTimeService.getStats(),
+          UmamiService.getStats(),
+          UmamiService.getLocations(),
+          UmamiService.getMetrics('url'),
+          UmamiService.getMetrics('referrer'),
+          UmamiService.getChartData('7d'),
           GitHubService.getUserRepos(),
           GitHubService.getCommitActivity()
         ]);
@@ -54,6 +97,11 @@ export function Dashboard() {
         setProfile(profileData);
         setCommits(commitData);
         setWakaStats(wakaData.data);
+        setUmamiStats(umamiData);
+        setUmamiLocations(locationsData);
+        setUmamiPages(pagesData);
+        setUmamiReferrers(referrersData);
+        setUmamiChartData(chartData);
         setCommitActivity(activityData);
         
         const stars = reposData.reduce((acc: number, repo: any) => acc + repo.stargazers_count, 0);
@@ -69,6 +117,14 @@ export function Dashboard() {
 
     fetchData();
   }, []);
+
+  const handleToggleChart = async (view: '7d' | '12m') => {
+    setChartView(view);
+    setFetchingChart(true);
+    const data = await UmamiService.getChartData(view);
+    setUmamiChartData(data);
+    setFetchingChart(false);
+  };
 
   if (loading) {
     return (
@@ -93,12 +149,19 @@ export function Dashboard() {
     );
   }
 
+  const formatTime = (seconds: number) => {
+    if (!seconds) return "0s";
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
+  };
+
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-white dark:bg-slate-900 p-3 border border-slate-200 dark:border-slate-700 shadow-xl rounded-xl">
-          <p className="text-xs font-bold text-slate-400 uppercase mb-1">{payload[0].payload.fullDate || payload[0].payload.day}</p>
-          <p className="text-sm font-black text-emerald-500">{payload[0].value} Hours</p>
+          <p className="text-xs font-bold text-slate-400 uppercase mb-1">{payload[0].payload.x || payload[0].payload.day}</p>
+          <p className="text-sm font-black text-blue-500">{payload[0].value} Visits</p>
         </div>
       );
     }
@@ -107,6 +170,256 @@ export function Dashboard() {
 
   return (
     <div className="max-w-5xl pb-10 space-y-12">
+      {/* Umami Web Analytics Section */}
+      <div className="space-y-8">
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
+            <UmamiLogo />
+          </div>
+          <div>
+            <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Web Analytics</h2>
+            <p className="text-xs font-medium text-slate-500">Real-time website traffic via Umami</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            { 
+              label: "Live Visitors", 
+              value: umamiStats?.visitors || 0, 
+              icon: <Activity size={20}/>, 
+              color: "text-emerald-500", 
+              bg: "bg-emerald-50 dark:bg-emerald-900/20" 
+            },
+            { 
+              label: "Page Views", 
+              value: umamiStats?.pageviews || 0, 
+              icon: <Eye size={20}/>, 
+              color: "text-blue-500", 
+              bg: "bg-blue-50 dark:bg-blue-900/20" 
+            },
+            { 
+              label: "Avg. Visit Time", 
+              value: formatTime(umamiStats?.sessions > 0 ? umamiStats.totaltime / umamiStats.sessions : 0),
+              icon: <Clock size={20}/>, 
+              isString: true,
+              color: "text-purple-500", 
+              bg: "bg-purple-50 dark:bg-purple-900/20" 
+            },
+            { 
+              label: "Events", 
+              value: umamiStats?.events || 0, 
+              icon: <TrendingUp size={20}/>, 
+              color: "text-amber-500", 
+              bg: "bg-amber-50 dark:bg-amber-900/20" 
+            }
+          ].map((stat, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+              className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-all group"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div className={`p-2.5 rounded-xl ${stat.bg} ${stat.color}`}>
+                  {stat.icon}
+                </div>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">24h</span>
+              </div>
+              <div>
+                <p className="text-2xl font-black text-slate-900 dark:text-white group-hover:scale-105 transition-transform origin-left">
+                  {stat.isString ? stat.value : stat.value.toLocaleString()}
+                </p>
+                <p className="text-xs font-medium text-slate-500 mt-1">{stat.label}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Visit History & Locations Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Visit History Chart */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="lg:col-span-2 bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden"
+          >
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <LineChart className="text-blue-500" size={20} /> Visit History
+              </h3>
+              
+              <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+                <button 
+                  onClick={() => handleToggleChart('7d')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${chartView === '7d' ? 'bg-white dark:bg-slate-700 text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                >
+                  7 Hari
+                </button>
+                <button 
+                  onClick={() => handleToggleChart('12m')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${chartView === '12m' ? 'bg-white dark:bg-slate-700 text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                >
+                  12 Bulan
+                </button>
+              </div>
+            </div>
+
+            <div className={`h-64 w-full transition-opacity duration-300 ${fetchingChart ? 'opacity-30' : 'opacity-100'}`}>
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={umamiChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="colorVisits" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <XAxis 
+                    dataKey="x" 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 'bold' }}
+                    tickFormatter={(val) => chartView === '7d' ? val.split('-').slice(2).join('') : val}
+                  />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 10 }} />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Area 
+                    type="monotone" 
+                    dataKey="y" 
+                    stroke="#3b82f6" 
+                    strokeWidth={3} 
+                    fillOpacity={1} 
+                    fill="url(#colorVisits)" 
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+            
+            {fetchingChart && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-500 border-t-transparent"></div>
+              </div>
+            )}
+          </motion.div>
+
+          {/* Visitor Locations */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm"
+          >
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-8">
+              <Globe className="text-purple-500" size={20} /> Visitor Locations
+            </h3>
+            
+            <div className="space-y-6">
+              {umamiLocations.length > 0 ? (
+                umamiLocations.map((loc, i) => (
+                  <div key={i} className="space-y-2">
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                         {loc.x}
+                      </span>
+                      <span className="text-slate-400 text-xs font-black">{loc.y}</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: `${Math.min((loc.y / (umamiLocations[0]?.y || 1)) * 100, 100)}%` }}
+                        transition={{ duration: 1, delay: 0.3 + (i * 0.1) }}
+                        className="h-full bg-purple-500 rounded-full"
+                      />
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-center py-10 text-slate-400 text-sm italic">No location data available</p>
+              )}
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Detailed Metrics: Pages & Referrers */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Top Pages */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm"
+          >
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-8">
+              <FileText className="text-blue-500" size={20} /> Top Pages
+            </h3>
+            
+            <div className="space-y-6">
+              {umamiPages.length > 0 ? (
+                umamiPages.map((page, i) => (
+                  <div key={i} className="space-y-2">
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="font-bold text-slate-700 dark:text-slate-300 truncate max-w-[80%]" title={page.x}>
+                         {page.x}
+                      </span>
+                      <span className="text-slate-400 text-xs font-black">{page.y}</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: `${Math.min((page.y / (umamiPages[0]?.y || 1)) * 100, 100)}%` }}
+                        transition={{ duration: 1, delay: 0.4 + (i * 0.1) }}
+                        className="h-full bg-blue-500 rounded-full"
+                      />
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-center py-10 text-slate-400 text-sm italic">No page data available</p>
+              )}
+            </div>
+          </motion.div>
+
+          {/* Top Referrers */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm"
+          >
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-8">
+              <Share2 className="text-emerald-500" size={20} /> Top Referrers
+            </h3>
+            
+            <div className="space-y-6">
+              {umamiReferrers.length > 0 ? (
+                umamiReferrers.map((ref, i) => (
+                  <div key={i} className="space-y-2">
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="font-bold text-slate-700 dark:text-slate-300 truncate max-w-[80%]" title={ref.x}>
+                         {ref.x === "direct" ? "Link Langsung" : ref.x}
+                      </span>
+                      <span className="text-slate-400 text-xs font-black">{ref.y}</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: `${Math.min((ref.y / (umamiReferrers[0]?.y || 1)) * 100, 100)}%` }}
+                        transition={{ duration: 1, delay: 0.5 + (i * 0.1) }}
+                        className="h-full bg-emerald-500 rounded-full"
+                      />
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-center py-10 text-slate-400 text-sm italic">No referrer data available</p>
+              )}
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
       {/* GitHub Section */}
       <div className="space-y-8">
         <div className="flex items-center gap-3">
