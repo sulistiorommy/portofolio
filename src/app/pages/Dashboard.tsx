@@ -182,6 +182,17 @@ export function Dashboard() {
           </div>
         </div>
 
+        {umamiStats?.error === "API_KEY_INVALID" && (
+          <div className="p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-2xl text-amber-700 dark:text-amber-400 text-sm">
+            <p className="font-bold flex items-center gap-2">
+              ⚠️ Konfigurasi Umami Belum Sesuai
+            </p>
+            <p className="mt-1">
+              API Key di file <code className="bg-amber-100 dark:bg-amber-800 px-1 rounded">.env</code> tidak valid atau belum disetel. Mohon periksa kembali tutorial di atas.
+            </p>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
             { 
@@ -361,7 +372,7 @@ export function Dashboard() {
                   <div key={i} className="space-y-2">
                     <div className="flex justify-between items-center text-sm">
                       <span className="font-bold text-slate-700 dark:text-slate-300 truncate max-w-[80%]" title={page.x}>
-                         {page.x}
+                         {page.x === '/' ? t('home') : page.x.replace(/^\//, '').charAt(0).toUpperCase() + page.x.replace(/^\//, '').slice(1)}
                       </span>
                       <span className="text-slate-400 text-xs font-black">{page.y}</span>
                     </div>
