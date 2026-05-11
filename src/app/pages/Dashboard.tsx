@@ -212,8 +212,8 @@ export function Dashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
             {
-              label: "Live Visitors",
-              value: umamiStats?.visitors || 0,
+              label: "Total Visits",
+              value: umamiStats?.sessions || 0,
               icon: <Activity size={20} />,
               color: "text-emerald-500",
               bg: "bg-emerald-50 dark:bg-emerald-900/20"
@@ -252,7 +252,7 @@ export function Dashboard() {
                 <div className={`p-2.5 rounded-xl ${stat.bg} ${stat.color}`}>
                   {stat.icon}
                 </div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">24h</span>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">30d</span>
               </div>
               <div>
                 <p className="text-2xl font-black text-slate-900 dark:text-white group-hover:scale-105 transition-transform origin-left">

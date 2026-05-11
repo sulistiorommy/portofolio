@@ -24,7 +24,7 @@ export const UmamiService = {
       if (!UMAMI_WEBSITE_ID || !UMAMI_API_KEY) return this.getEmptyStats();
 
       const endAt = Date.now();
-      const startAt = endAt - DAY_MS;
+      const startAt = endAt - 30 * DAY_MS;
 
       const response = await fetch(
         buildUrl('stats', { startAt, endAt }),
