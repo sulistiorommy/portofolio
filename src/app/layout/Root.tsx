@@ -1,9 +1,18 @@
 import { Outlet, NavLink, Link, useLocation } from "react-router";
 import { useAppContext } from "../context/AppContext";
-import { Moon, Sun, Languages, Home, User, Award, FolderOpen, LayoutDashboard, Mail, Menu, X, Linkedin, Phone } from "lucide-react";
+import { Moon, Sun, Languages, Home, User, Award, FolderOpen, LayoutDashboard, Mail, Menu, Phone } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import * as Switch from "@radix-ui/react-switch";
+
+const NAV_LINKS = [
+  { name: "home", path: "/", icon: Home },
+  { name: "about", path: "/about", icon: User },
+  { name: "achievements", path: "/achievements", icon: Award },
+  { name: "project", path: "/project", icon: FolderOpen },
+  { name: "dashboard", path: "/dashboard", icon: LayoutDashboard },
+  { name: "contact", path: "/contact", icon: Mail },
+] as const;
 
 export function Root() {
   const { theme, setTheme, language, setLanguage, t } = useAppContext();
@@ -11,30 +20,16 @@ export function Root() {
   const location = useLocation();
 
   useEffect(() => {
-    const pageTitle = navLinks.find(link => link.path === location.pathname)?.name || "Portfolio";
+    const pageTitle = NAV_LINKS.find((link) => link.path === location.pathname)?.name || "Portfolio";
     document.title = `${t(pageTitle)} | ${t('fullname')}`;
   }, [location.pathname, language, t]);
 
-  const toggleTheme = () => {
-    setTheme(theme === "light" ? "dark" : "light");
-  };
-
-  const toggleLanguage = () => {
-    setLanguage(language === "id" ? "en" : "id");
-  };
-
-  const navLinks = [
-    { name: "home", path: "/", icon: Home },
-    { name: "about", path: "/about", icon: User },
-    { name: "achievements", path: "/achievements", icon: Award },
-    { name: "project", path: "/project", icon: FolderOpen },
-    { name: "dashboard", path: "/dashboard", icon: LayoutDashboard },
-    { name: "contact", path: "/contact", icon: Mail },
-  ];
+  const toggleTheme = () => setTheme(theme === "light" ? "dark" : "light");
+  const toggleLanguage = () => setLanguage(language === "id" ? "en" : "id");
 
   const sidebarContent = (
     <div className="flex flex-col h-full overflow-y-auto w-64 border-r border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 transition-colors duration-300 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-      {/* 1. Header with Compact Switches */}
+      {/* Header with Compact Switches */}
       <div className="flex items-center justify-between p-4 gap-2">
         {/* Theme Toggle */}
         <div className="flex items-center gap-2">
@@ -65,7 +60,7 @@ export function Root() {
         </div>
       </div>
 
-      {/* 2 & 3. Profile Info */}
+      {/* Profile Info */}
       <div className="flex flex-col items-center mt-6 mb-8 px-4">
         <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-blue-500 dark:border-blue-400 mb-4 shadow-lg">
           <ImageWithFallback
@@ -80,14 +75,14 @@ export function Root() {
         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">{t('role')}</p>
       </div>
 
-      {/* 4. Divider */}
+      {/* Divider */}
       <div className="px-6 mb-4">
         <hr className="border-slate-200 dark:border-slate-800" />
       </div>
 
-      {/* 5. Menu Links */}
+      {/* Menu Links */}
       <nav className="flex-1 px-4 space-y-2">
-        {navLinks.map((link) => {
+        {NAV_LINKS.map((link) => {
           const Icon = link.icon;
           return (
             <NavLink
@@ -95,9 +90,10 @@ export function Root() {
               to={link.path}
               onClick={() => setIsMobileOpen(false)}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive
-                  ? "bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium"
-                  : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-200"
+                `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+                  isActive
+                    ? "bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium"
+                    : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-200"
                 }`
               }
             >
@@ -108,7 +104,7 @@ export function Root() {
         })}
       </nav>
 
-      {/* 6. Footer */}
+      {/* Footer */}
       <div className="p-4 mt-auto">
         <p className="text-[10px] text-center text-slate-400 font-medium uppercase tracking-widest opacity-60">
           © 2026 {t('fullname')}
@@ -129,8 +125,9 @@ export function Root() {
 
       {/* Mobile Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 transform md:hidden transition-transform duration-300 ease-in-out ${isMobileOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
+        className={`fixed inset-y-0 left-0 z-50 transform md:hidden transition-transform duration-300 ease-in-out ${
+          isMobileOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
       >
         {sidebarContent}
       </div>
@@ -161,7 +158,7 @@ export function Root() {
         {/* Floating Contact Button */}
         <Link
           to="/contact"
-          className="fixed bottom-8 right-8 z-40 group flex items-center gap-0 hover:gap-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 rounded-full shadow-2xl shadow-blue-500/40 hover:shadow-blue-500/60 transition-all duration-300 overflow-hidden md:flex transition-all"
+          className="fixed bottom-8 right-8 z-40 group flex items-center gap-0 hover:gap-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 rounded-full shadow-2xl shadow-blue-500/40 hover:shadow-blue-500/60 transition-all duration-300 overflow-hidden md:flex"
         >
           <Phone className="w-6 h-6" />
           <span className="max-w-0 group-hover:max-w-[100px] overflow-hidden transition-all duration-500 font-bold whitespace-nowrap">

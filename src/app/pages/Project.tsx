@@ -10,47 +10,96 @@ import {
 } from "../components/ui/dialog";
 import { Badge } from "../components/ui/badge";
 
+interface ProjectItem {
+  id: string;
+  title: string;
+  shortDescription: string;
+  descriptionKey: string;
+  featuresKey: string;
+  techKey: string;
+  tech: string[];
+  image: string;
+  liveUrl: string;
+  githubUrl: string;
+}
+
+const PROJECTS: ProjectItem[] = [
+  {
+    id: "moss-wall",
+    title: "Landing Page Company Profile",
+    shortDescription: "Moss Wall Property adalah sebuah landing page modern untuk perusahaan properti yang mengusung konsep green living.",
+    descriptionKey: "project_moss_wall_desc",
+    featuresKey: "project_moss_wall_features",
+    techKey: "project_moss_wall_tech_desc",
+    tech: ["HTML", "CSS", "Javascript"],
+    image: "/project/Moss_Wall.png",
+    liveUrl: "https://splendorous-beignet-cb79c2.netlify.app/",
+    githubUrl: "https://github.com/sulistiorommy/tes.git",
+  },
+  {
+    id: "umrah-mgmt",
+    title: "Umrah & Hajj Management System",
+    shortDescription: "Sistem Manajemen CS untuk mengelola ekosistem jamaah secara digital.",
+    descriptionKey: "project_umrah_mgmt_desc",
+    featuresKey: "project_umrah_mgmt_features",
+    techKey: "project_umrah_mgmt_tech_desc",
+    tech: ["Tailwind CSS", "Node.js", "MySQL"],
+    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    liveUrl: "private",
+    githubUrl: "private",
+  },
+  {
+    id: "portfolio-web",
+    title: "Interactive Web Portfolio & Dashboard",
+    shortDescription: "Personal portfolio website featuring real-time GitHub stats and WakaTime coding activity integrations.",
+    descriptionKey: "project_portfolio_desc",
+    featuresKey: "project_portfolio_features",
+    techKey: "project_portfolio_tech_desc",
+    tech: ["React", "TailwindCSS", "API Integration"],
+    image: "/project/portofolio.png",
+    liveUrl: "https://portofolio-liard-zeta.vercel.app/",
+    githubUrl: "https://github.com/sulistiorommy/portofolio",
+  },
+];
+
+function ProjectLinks({ project }: { project: ProjectItem }) {
+  return (
+    <div className="flex items-center gap-4 mt-auto pt-4 border-t border-slate-100 dark:border-slate-800">
+      {project.githubUrl === "private" ? (
+        <span className="flex items-center gap-2 text-xs font-semibold text-slate-400 cursor-not-allowed">
+          <Github size={16} /> Private
+        </span>
+      ) : (
+        <a
+          href={project.githubUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors"
+        >
+          <Github size={16} /> Code
+        </a>
+      )}
+
+      {project.liveUrl === "private" ? (
+        <span className="flex items-center gap-2 text-xs font-semibold text-slate-400 cursor-not-allowed">
+          <ExternalLink size={16} /> Internal
+        </span>
+      ) : (
+        <a
+          href={project.liveUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 transition-colors"
+        >
+          <ExternalLink size={16} /> Live Demo
+        </a>
+      )}
+    </div>
+  );
+}
+
 export function Project() {
   const { t } = useAppContext();
-
-  const projects = [
-    {
-      id: "moss-wall",
-      title: "Landing Page Company Profile",
-      shortDescription: "Moss Wall Property adalah sebuah landing page modern untuk perusahaan properti yang mengusung konsep green living.",
-      descriptionKey: "project_moss_wall_desc",
-      featuresKey: "project_moss_wall_features",
-      techKey: "project_moss_wall_tech_desc",
-      tech: ["HTML", "CSS", "Javascript"],
-      image: "/project/Moss_Wall.png",
-      liveUrl: "https://splendorous-beignet-cb79c2.netlify.app/",
-      githubUrl: "https://github.com/sulistiorommy/tes.git"
-    },
-    {
-      id: "umrah-mgmt",
-      title: "Umrah & Hajj Management System",
-      shortDescription: "Sistem Manajemen CS untuk mengelola ekosistem jamaah secara digital.",
-      descriptionKey: "project_umrah_mgmt_desc",
-      featuresKey: "project_umrah_mgmt_features",
-      techKey: "project_umrah_mgmt_tech_desc",
-      tech: ["Tailwind CSS", "Node.js", "MySQL"],
-      image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      liveUrl: "private",
-      githubUrl: "private"
-    },
-    {
-      id: "portfolio-web",
-      title: "Interactive Web Portfolio & Dashboard",
-      shortDescription: "Personal portfolio website featuring real-time GitHub stats and WakaTime coding activity integrations.",
-      descriptionKey: "project_portfolio_desc",
-      featuresKey: "project_portfolio_features",
-      techKey: "project_portfolio_tech_desc",
-      tech: ["React", "TailwindCSS", "API Integration"],
-      image: "/project/portofolio.png",
-      liveUrl: "https://portofolio-liard-zeta.vercel.app/",
-      githubUrl: "https://github.com/sulistiorommy/portofolio"
-    }
-  ];
 
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-5xl pb-10">
@@ -62,11 +111,9 @@ export function Project() {
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {projects.map((project, index) => (
-          <Dialog key={index}>
-            <div
-              className="group flex flex-col bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-800 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
-            >
+        {PROJECTS.map((project) => (
+          <Dialog key={project.id}>
+            <div className="group flex flex-col bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-800 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
               <div className="relative h-48 overflow-hidden bg-slate-100 dark:bg-slate-800">
                 <img
                   src={project.image}
@@ -93,44 +140,14 @@ export function Project() {
                 </p>
 
                 <div className="flex flex-wrap gap-2 mb-6">
-                  {project.tech.map((tech, i) => (
-                    <Badge key={i} variant="secondary" className="bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 border-none">
-                      {tech}
+                  {project.tech.map((techName) => (
+                    <Badge key={techName} variant="secondary" className="bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 border-none">
+                      {techName}
                     </Badge>
                   ))}
                 </div>
 
-                <div className="flex items-center gap-4 mt-auto pt-4 border-t border-slate-100 dark:border-slate-800">
-                  {project.githubUrl === "private" ? (
-                    <span className="flex items-center gap-2 text-xs font-semibold text-slate-400 cursor-not-allowed">
-                      <Github size={16} /> Private
-                    </span>
-                  ) : (
-                    <a
-                      href={project.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors"
-                    >
-                      <Github size={16} /> Code
-                    </a>
-                  )}
-
-                  {project.liveUrl === "private" ? (
-                    <span className="flex items-center gap-2 text-xs font-semibold text-slate-400 cursor-not-allowed">
-                      <ExternalLink size={16} /> Internal
-                    </span>
-                  ) : (
-                    <a
-                      href={project.liveUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 transition-colors"
-                    >
-                      <ExternalLink size={16} /> Live Demo
-                    </a>
-                  )}
-                </div>
+                <ProjectLinks project={project} />
               </div>
             </div>
 
@@ -138,39 +155,42 @@ export function Project() {
               <DialogHeader>
                 <DialogTitle className="text-2xl font-bold">{project.title}</DialogTitle>
                 <DialogDescription className="text-slate-900 dark:text-slate-400 font-medium">
-                  Project Details & Roadmap
+                  {t('project_detail_label')}
                 </DialogDescription>
               </DialogHeader>
 
               <div className="space-y-6 mt-4">
                 <section>
-                  <h4 className="font-bold text-slate-900 dark:text-white mb-2 underline decoration-blue-500 underline-offset-4">Deskripsi Singkat</h4>
+                  <h4 className="font-bold text-slate-900 dark:text-white mb-2 underline decoration-blue-500 underline-offset-4">
+                    {t('project_desc_label')}
+                  </h4>
                   <p className="text-slate-600 dark:text-slate-400 leading-relaxed italic">
-                    {project.descriptionKey ? t(project.descriptionKey) : project.shortDescription}
+                    {t(project.descriptionKey)}
                   </p>
                 </section>
 
                 <section>
-                  <h4 className="font-bold text-slate-900 dark:text-white mb-2 underline decoration-blue-500 underline-offset-4">Fitur Utama</h4>
+                  <h4 className="font-bold text-slate-900 dark:text-white mb-2 underline decoration-blue-500 underline-offset-4">
+                    {t('project_features_label')}
+                  </h4>
                   <div className="flex flex-wrap gap-2">
-                    {project.featuresKey ? t(project.featuresKey).split(',').map((f, i) => (
-                      <Badge key={i} variant="outline" className="border-slate-200 dark:border-slate-700">
-                        {f.trim()}
+                    {t(project.featuresKey).split(',').map((feature) => (
+                      <Badge key={feature.trim()} variant="outline" className="border-slate-200 dark:border-slate-700">
+                        {feature.trim()}
                       </Badge>
-                    )) : "Detailed features coming soon."}
+                    ))}
                   </div>
                 </section>
 
                 <section>
-                  <h4 className="font-bold text-slate-900 dark:text-white mb-2 underline decoration-blue-500 underline-offset-4">Teknologi & Lingkungan</h4>
+                  <h4 className="font-bold text-slate-900 dark:text-white mb-2 underline decoration-blue-500 underline-offset-4">
+                    {t('project_tech_label')}
+                  </h4>
                   <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl text-sm text-slate-600 dark:text-slate-400 space-y-2">
-                    {project.techKey ? t(project.techKey).split('.').map((t, i) => (
-                      <p key={i}>{t.trim() && `${t.trim()}.`}</p>
-                    )) : (
-                      <div className="flex flex-wrap gap-2">
-                        {project.tech.map((t, i) => <Badge key={i}>{t}</Badge>)}
-                      </div>
-                    )}
+                    {t(project.techKey).split('.').map((sentence) => {
+                      const trimmed = sentence.trim();
+                      return trimmed ? <p key={trimmed}>{trimmed}.</p> : null;
+                    })}
                   </div>
                 </section>
 

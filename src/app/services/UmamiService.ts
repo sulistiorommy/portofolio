@@ -1,26 +1,38 @@
+import type { UmamiStats, UmamiMetricPoint, UmamiChartPoint } from './types';
+
 const UMAMI_WEBSITE_ID = import.meta.env.VITE_UMAMI_WEBSITE_ID;
 const UMAMI_API_KEY = import.meta.env.VITE_UMAMI_API_KEY;
 const UMAMI_SERVER_URL = import.meta.env.VITE_UMAMI_SERVER_URL || 'https://api.umami.is';
 
+const HOUR_MS = 60 * 60 * 1000;
+const DAY_MS = 24 * HOUR_MS;
+
+function buildUrl(path: string, params: Record<string, string | number>): string {
+  const qs = new URLSearchParams(
+    Object.entries(params).map(([k, v]) => [k, String(v)]),
+  ).toString();
+  return `${UMAMI_SERVER_URL}/v1/websites/${UMAMI_WEBSITE_ID}/${path}?${qs}`;
+}
+
+function getAuthHeaders(): HeadersInit {
+  return { 'x-umami-api-key': UMAMI_API_KEY };
+}
+
 export const UmamiService = {
-  async getStats() {
+  async getStats(): Promise<UmamiStats> {
     try {
-      if (!UMAMI_WEBSITE_ID || !UMAMI_API_KEY) {
-        return this.getEmptyStats();
-      }
+      if (!UMAMI_WEBSITE_ID || !UMAMI_API_KEY) return this.getEmptyStats();
 
       const endAt = Date.now();
-      const startAt = endAt - 24 * 60 * 60 * 1000;
+      const startAt = endAt - DAY_MS;
 
-      const apiUrl = `${UMAMI_SERVER_URL}/v1/websites/${UMAMI_WEBSITE_ID}/stats?startAt=${startAt}&endAt=${endAt}`;
-      const response = await fetch(apiUrl, {
-        headers: {
-          'x-umami-api-key': UMAMI_API_KEY
-        }
-      });
+      const response = await fetch(
+        buildUrl('stats', { startAt, endAt }),
+        { headers: getAuthHeaders() },
+      );
 
       if (!response.ok) {
-        if (response.status === 401) throw new Error("API_KEY_INVALID");
+        if (response.status === 401) throw new Error('API_KEY_INVALID');
         throw new Error(`Umami API Error: ${response.status}`);
       }
 
@@ -30,27 +42,26 @@ export const UmamiService = {
         pageviews: data.pageviews || 0,
         sessions: data.visits || data.sessions || 0,
         events: data.events || 0,
-        totaltime: data.totaltime || 0
+        totaltime: data.totaltime || 0,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Umami Stats Error:', error);
-      return { ...this.getEmptyStats(), error: error.message };
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      return { ...this.getEmptyStats(), error: message };
     }
   },
 
-  async getLocations() {
+  async getLocations(): Promise<UmamiMetricPoint[]> {
     try {
       if (!UMAMI_WEBSITE_ID || !UMAMI_API_KEY) return [];
 
       const endAt = Date.now();
-      const startAt = endAt - 7 * 24 * 60 * 60 * 1000;
+      const startAt = endAt - 7 * DAY_MS;
 
-      const apiUrl = `${UMAMI_SERVER_URL}/v1/websites/${UMAMI_WEBSITE_ID}/metrics?type=country&startAt=${startAt}&endAt=${endAt}`;
-      const response = await fetch(apiUrl, {
-        headers: {
-          'x-umami-api-key': UMAMI_API_KEY
-        }
-      });
+      const response = await fetch(
+        buildUrl('metrics', { type: 'country', startAt, endAt }),
+        { headers: getAuthHeaders() },
+      );
 
       if (!response.ok) throw new Error(`Umami Metrics Error: ${response.status}`);
 
@@ -62,28 +73,20 @@ export const UmamiService = {
     }
   },
 
-  async getChartData(view: '7d' | '12m' = '7d') {
+  async getChartData(view: '7d' | '12m' = '7d'): Promise<UmamiChartPoint[]> {
     try {
       if (!UMAMI_WEBSITE_ID || !UMAMI_API_KEY) return [];
 
       const endAt = Date.now();
-      let startAt;
-      let unit: 'day' | 'month';
+      const startAt = view === '7d'
+        ? endAt - 7 * DAY_MS
+        : endAt - 12 * 30 * DAY_MS;
+      const unit = view === '7d' ? 'day' : 'month';
 
-      if (view === '7d') {
-        startAt = endAt - 7 * 24 * 60 * 60 * 1000;
-        unit = 'day';
-      } else {
-        startAt = endAt - 12 * 30 * 24 * 60 * 60 * 1000; // ~12 months
-        unit = 'month';
-      }
-
-      const apiUrl = `${UMAMI_SERVER_URL}/v1/websites/${UMAMI_WEBSITE_ID}/pageviews?unit=${unit}&startAt=${startAt}&endAt=${endAt}`;
-      const response = await fetch(apiUrl, {
-        headers: {
-          'x-umami-api-key': UMAMI_API_KEY
-        }
-      });
+      const response = await fetch(
+        buildUrl('pageviews', { unit, startAt, endAt }),
+        { headers: getAuthHeaders() },
+      );
 
       if (!response.ok) throw new Error(`Umami Pageviews Error: ${response.status}`);
 
@@ -95,19 +98,19 @@ export const UmamiService = {
     }
   },
 
-  async getMetrics(type: 'url' | 'referrer' | 'browser' | 'os' | 'device') {
+  async getMetrics(
+    type: 'url' | 'referrer' | 'browser' | 'os' | 'device',
+  ): Promise<UmamiMetricPoint[]> {
     try {
       if (!UMAMI_WEBSITE_ID || !UMAMI_API_KEY) return [];
 
       const endAt = Date.now();
-      const startAt = endAt - 7 * 24 * 60 * 60 * 1000; // Last 7 days
+      const startAt = endAt - 7 * DAY_MS;
 
-      const apiUrl = `${UMAMI_SERVER_URL}/v1/websites/${UMAMI_WEBSITE_ID}/metrics?type=${type}&startAt=${startAt}&endAt=${endAt}`;
-      const response = await fetch(apiUrl, {
-        headers: {
-          'x-umami-api-key': UMAMI_API_KEY
-        }
-      });
+      const response = await fetch(
+        buildUrl('metrics', { type, startAt, endAt }),
+        { headers: getAuthHeaders() },
+      );
 
       if (!response.ok) throw new Error(`Umami Metrics Error: ${response.status}`);
 
@@ -119,9 +122,7 @@ export const UmamiService = {
     }
   },
 
-  getEmptyStats() {
+  getEmptyStats(): UmamiStats {
     return { visitors: 0, pageviews: 0, sessions: 0, events: 0, totaltime: 0 };
-  }
+  },
 };
-
-
