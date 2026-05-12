@@ -83,56 +83,67 @@ export function Dashboard() {
   const [totalStars, setTotalStars] = useState(0);
   const [loading, setLoading] = useState(true);
   const [fetchingChart, setFetchingChart] = useState(false);
+  const [failedSections, setFailedSections] = useState<string[]>([]);
+
+  async function fetchData() {
+    setLoading(true);
+    const errors: string[] = [];
+
+    // Use Promise.allSettled so partial failures don't crash the whole dashboard
+    const results = await Promise.allSettled([
+      GitHubService.getUserProfile(),            // 0
+      GitHubService.getRecentCommits(3),          // 1
+      WakaTimeService.getStats(),                 // 2
+      UmamiService.getStats(),                    // 3
+      UmamiService.getLocations(),                // 4
+      UmamiService.getMetrics('url'),             // 5
+      UmamiService.getMetrics('referrer'),        // 6
+      UmamiService.getChartData('7d'),            // 7
+      GitHubService.getUserRepos(),               // 8
+      GitHubService.getCommitActivity(),          // 9
+    ]);
+
+    // Helper: extract value from settled result or use fallback
+    const val = <T,>(index: number, fallback: T): T =>
+      results[index].status === 'fulfilled' ? (results[index] as PromiseFulfilledResult<T>).value : fallback;
+
+    // Track which sections failed
+    const sectionMap: Record<number, string> = {
+      0: 'GitHub', 1: 'GitHub', 8: 'GitHub', 9: 'GitHub',
+      2: 'WakaTime',
+      3: 'Umami', 4: 'Umami', 5: 'Umami', 6: 'Umami', 7: 'Umami',
+    };
+
+    results.forEach((r, i) => {
+      if (r.status === 'rejected') {
+        console.warn(`Dashboard API call #${i} failed:`, r.reason);
+        const section = sectionMap[i];
+        if (section && !errors.includes(section)) errors.push(section);
+      }
+    });
+
+    setProfile(val<GitHubProfile | null>(0, null));
+    setCommits(val<CommitEntry[]>(1, []));
+
+    const wakaData = val(2, WakaTimeService.getMockData());
+    setWakaStats(wakaData.data);
+
+    setUmamiStats(val(3, UmamiService.getEmptyStats()));
+    setUmamiLocations(val<UmamiMetricPoint[]>(4, []));
+    setUmamiPages(val<UmamiMetricPoint[]>(5, []));
+    setUmamiReferrers(val<UmamiMetricPoint[]>(6, []));
+    setUmamiChartData(val<UmamiChartPoint[]>(7, []));
+    setCommitActivity(val<CommitActivityPoint[]>(9, []));
+
+    const repos = val<GitHubRepo[]>(8, []);
+    const stars = repos.reduce((acc, repo) => acc + repo.stargazers_count, 0);
+    setTotalStars(stars);
+
+    setFailedSections(errors);
+    setLoading(false);
+  }
 
   useEffect(() => {
-    async function fetchData() {
-      setLoading(true);
-
-      // Use Promise.allSettled so partial failures don't crash the whole dashboard
-      const results = await Promise.allSettled([
-        GitHubService.getUserProfile(),            // 0
-        GitHubService.getRecentCommits(3),          // 1
-        WakaTimeService.getStats(),                 // 2
-        UmamiService.getStats(),                    // 3
-        UmamiService.getLocations(),                // 4
-        UmamiService.getMetrics('url'),             // 5
-        UmamiService.getMetrics('referrer'),        // 6
-        UmamiService.getChartData('7d'),            // 7
-        GitHubService.getUserRepos(),               // 8
-        GitHubService.getCommitActivity(),          // 9
-      ]);
-
-      // Helper: extract value from settled result or use fallback
-      const val = <T,>(index: number, fallback: T): T =>
-        results[index].status === 'fulfilled' ? (results[index] as PromiseFulfilledResult<T>).value : fallback;
-
-      // Log individual failures for debugging (won't crash UI)
-      results.forEach((r, i) => {
-        if (r.status === 'rejected') {
-          console.warn(`Dashboard API call #${i} failed:`, r.reason);
-        }
-      });
-
-      setProfile(val<GitHubProfile | null>(0, null));
-      setCommits(val<CommitEntry[]>(1, []));
-
-      const wakaData = val(2, WakaTimeService.getMockData());
-      setWakaStats(wakaData.data);
-
-      setUmamiStats(val(3, UmamiService.getEmptyStats()));
-      setUmamiLocations(val<UmamiMetricPoint[]>(4, []));
-      setUmamiPages(val<UmamiMetricPoint[]>(5, []));
-      setUmamiReferrers(val<UmamiMetricPoint[]>(6, []));
-      setUmamiChartData(val<UmamiChartPoint[]>(7, []));
-      setCommitActivity(val<CommitActivityPoint[]>(9, []));
-
-      const repos = val<GitHubRepo[]>(8, []);
-      const stars = repos.reduce((acc, repo) => acc + repo.stargazers_count, 0);
-      setTotalStars(stars);
-
-      setLoading(false);
-    }
-
     fetchData();
   }, []);
 
@@ -186,6 +197,30 @@ export function Dashboard() {
 
   return (
     <div className="max-w-5xl pb-10 space-y-12">
+      {/* Error Banner with Retry */}
+      {failedSections.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-2xl flex items-center justify-between gap-4"
+        >
+          <div className="text-amber-700 dark:text-amber-400 text-sm">
+            <p className="font-bold flex items-center gap-2">
+              ⚠️ Beberapa data gagal dimuat
+            </p>
+            <p className="mt-1">
+              Gagal mengambil data dari: <b>{failedSections.join(', ')}</b>. Kemungkinan server sedang lambat atau koneksi terputus.
+            </p>
+          </div>
+          <button
+            onClick={() => { UmamiService.clearCache(); fetchData(); }}
+            className="shrink-0 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-sm font-bold transition-colors shadow-sm"
+          >
+            🔄 Coba Lagi
+          </button>
+        </motion.div>
+      )}
+
       {/* Umami Web Analytics Section */}
       <div className="space-y-8">
         <div className="flex items-center gap-3">

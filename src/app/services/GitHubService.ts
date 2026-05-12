@@ -8,9 +8,55 @@ const headers: HeadersInit = {
   ...(GITHUB_TOKEN ? { Authorization: `Bearer ${GITHUB_TOKEN}` } : {}),
 };
 
+// ── Timeout & Retry Configuration ──
+const FETCH_TIMEOUT_MS = 10_000;  // 10 second timeout per request
+const MAX_RETRIES = 1;            // Retry once on failure
+
+// ── Fetch with timeout ──
+async function fetchWithTimeout(url: string, options: RequestInit, timeoutMs = FETCH_TIMEOUT_MS): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    });
+    return response;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+// ── Fetch with retry + timeout ──
+async function fetchWithRetry(url: string, options: RequestInit): Promise<Response> {
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      const response = await fetchWithTimeout(url, options);
+      if (response.ok || response.status < 500) return response;
+
+      if (attempt < MAX_RETRIES) {
+        console.warn(`GitHub API retry ${attempt + 1}/${MAX_RETRIES} (status ${response.status})`);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        continue;
+      }
+      return response;
+    } catch (error) {
+      if (attempt < MAX_RETRIES) {
+        const isTimeout = error instanceof DOMException && error.name === 'AbortError';
+        console.warn(`GitHub API retry ${attempt + 1}/${MAX_RETRIES} (${isTimeout ? 'timeout' : 'network error'})`);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        continue;
+      }
+      throw error;
+    }
+  }
+  throw new Error('GitHub API: Max retries exceeded');
+}
+
 export const GitHubService = {
   async getUserProfile(): Promise<GitHubProfile> {
-    const response = await fetch(
+    const response = await fetchWithRetry(
       `https://api.github.com/users/${GITHUB_USERNAME}`,
       { headers },
     );
@@ -19,7 +65,7 @@ export const GitHubService = {
   },
 
   async getUserRepos(): Promise<GitHubRepo[]> {
-    const response = await fetch(
+    const response = await fetchWithRetry(
       `https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated`,
       { headers },
     );
@@ -34,7 +80,7 @@ export const GitHubService = {
       lastWeek.setDate(today.getDate() - 7);
       const dateStr = lastWeek.toISOString().split('T')[0];
 
-      const response = await fetch(
+      const response = await fetchWithRetry(
         `https://api.github.com/search/commits?q=author:${GITHUB_USERNAME}+committer-date:>${dateStr}&sort=committer-date&order=desc`,
         { headers },
       );
@@ -72,7 +118,7 @@ export const GitHubService = {
 
   async getRecentCommits(limit = 3): Promise<CommitEntry[]> {
     try {
-      const response = await fetch(
+      const response = await fetchWithRetry(
         `https://api.github.com/search/commits?q=author:${GITHUB_USERNAME}&sort=committer-date&order=desc&per_page=${limit}`,
         { headers },
       );
