@@ -60,6 +60,18 @@ const PROJECTS: ProjectItem[] = [
     liveUrl: "https://portofolio-liard-zeta.vercel.app/",
     githubUrl: "https://github.com/sulistiorommy/portofolio",
   },
+  {
+    id: "tekma-solution",
+    title: "Company Profile & Product Catalog",
+    shortDescription: "Website company profile untuk PT Anugerah Jaya Tekma, penyedia jasa pemasangan CCTV, LED Videotron, dan sistem keamanan terpadu.",
+    descriptionKey: "project_tekma_desc",
+    featuresKey: "project_tekma_features",
+    techKey: "project_tekma_tech_desc",
+    tech: ["Next.js", "Tailwind CSS", "MySQL", "Node.js"],
+    image: "/project/tekma_solution.png",
+    liveUrl: "https://tekma-solution.com",
+    githubUrl: "private",
+  },
 ];
 
 function ProjectLinks({ project }: { project: ProjectItem }) {

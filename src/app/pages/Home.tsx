@@ -48,11 +48,11 @@ export function Home() {
           <span className="text-sm font-medium text-slate-500">{t('stat_projects')}</span>
         </div>
         <div className="flex flex-col gap-2">
-          <span className="text-4xl font-bold text-blue-600 dark:text-blue-400">9</span>
+          <span className="text-4xl font-bold text-blue-600 dark:text-blue-400">10</span>
           <span className="text-sm font-medium text-slate-500">{t('stat_completed')}</span>
         </div>
         <div className="flex flex-col gap-2">
-          <span className="text-4xl font-bold text-blue-600 dark:text-blue-400">2</span>
+          <span className="text-4xl font-bold text-blue-600 dark:text-blue-400">1</span>
           <span className="text-sm font-medium text-slate-500">{t('stat_in_progress')}</span>
         </div>
       </div>

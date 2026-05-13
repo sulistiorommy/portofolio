@@ -53,6 +53,12 @@ export const translations: Record<Language, Record<string, string>> = {
       "Real-time GitHub Stats, Live WakaTime Coding Activity Chart, Integrasi Analitik Umami, Dark/Light Mode, Multi-bahasa (ID/EN), Galeri Proyek & Sertifikat Interaktif",
     project_portfolio_tech_desc:
       "React 18 dengan Vite untuk performa super cepat. Tailwind CSS untuk styling komponen modern. Recharts untuk visualisasi grafik. Integrasi langsung dengan REST API GitHub, WakaTime & Umami. Framer Motion untuk animasi yang halus.",
+    project_tekma_desc:
+      "Website company profile profesional untuk PT Anugerah Jaya Tekma, perusahaan penyedia jasa pemasangan CCTV Hikvision, LED Videotron, Running Text, Access Control, dan sistem keamanan terpadu. Website ini dirancang sebagai platform katalog produk dan portofolio proyek yang informatif, dilengkapi dengan fitur multi-bahasa (Indonesia & Inggris) serta integrasi WhatsApp untuk konsultasi langsung.",
+    project_tekma_features:
+      "Katalog Produk & Paket CCTV, Galeri Portofolio Proyek, Multi-bahasa (ID/EN), Integrasi WhatsApp, Halaman Profil Perusahaan, Halaman Kontak, SEO Optimized, Responsive Design",
+    project_tekma_tech_desc:
+      "Next.js sebagai framework utama untuk performa optimal dan SEO-friendly. Tailwind CSS untuk styling modern dan responsif. Node.js & Express.js untuk backend API dan manajemen data. MySQL sebagai database relasional untuk menyimpan data produk dan proyek. Deployment menggunakan Vercel dan Render untuk performa tinggi dan keandalan.",
 
     // Certificates
     cert_web_basic_title: "Belajar Dasar Pemrograman Web",
@@ -196,6 +202,12 @@ export const translations: Record<Language, Record<string, string>> = {
       "Real-time GitHub Stats, Live WakaTime Coding Activity Chart, Umami Analytics Integration, Dark/Light Mode, Multi-language (ID/EN), Interactive Project & Certificate Galleries",
     project_portfolio_tech_desc:
       "React 18 with Vite for lightning-fast performance. Tailwind CSS for modern component styling. Recharts for data visualization. Direct integration with GitHub, WakaTime & Umami REST APIs. Framer Motion for smooth animations.",
+    project_tekma_desc:
+      "A professional company profile website for PT Anugerah Jaya Tekma, a provider of Hikvision CCTV installation, LED Videotron, Running Text, Access Control, and integrated security systems. The website is designed as an informative product catalog and project portfolio platform, featuring multi-language support (Indonesian & English) and WhatsApp integration for direct consultation.",
+    project_tekma_features:
+      "Product & CCTV Package Catalog, Project Portfolio Gallery, Multi-language (ID/EN), WhatsApp Integration, Company Profile Page, Contact Page, SEO Optimized, Responsive Design",
+    project_tekma_tech_desc:
+      "Next.js as the main framework for optimal performance and SEO-friendly architecture. Tailwind CSS for modern and responsive styling. Node.js & Express.js for backend API and data management. MySQL as a relational database for storing product and project data. Deployed on Vercel and Render for high performance and reliability.",
 
     // Certificates
     cert_web_basic_title: "Basic Web Programming Learning",
