@@ -44,7 +44,7 @@ export function About() {
     id === "all" ? SKILLS.length : SKILLS.filter((s) => s.category === id).length;
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-4xl pb-10">
+    <article className="animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-4xl pb-10">
       <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">
         {t('about')}
       </h1>
@@ -55,8 +55,7 @@ export function About() {
         </p>
       </div>
 
-      {/* Skills Section */}
-      <div className="flex flex-col gap-6">
+      <section className="flex flex-col gap-6" aria-label="Skills">
         <div className="flex flex-col gap-2">
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
             <span className="text-blue-600">{`</>`}</span> Skills
@@ -96,10 +95,9 @@ export function About() {
             </div>
           ))}
         </div>
-      </div>
+      </section>
 
-      {/* Work Experience Section */}
-      <div className="mt-16 flex flex-col gap-8">
+      <section className="mt-16 flex flex-col gap-8" aria-label="Work Experience">
         <div className="flex flex-col gap-2">
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
             <span className="text-blue-600"><Briefcase className="w-6 h-6" /></span> {t('experience_title')}
@@ -148,10 +146,9 @@ export function About() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Education Section */}
-      <div className="mt-16 flex flex-col gap-8">
+      <section className="mt-16 flex flex-col gap-8" aria-label="Education">
         <div className="flex flex-col gap-2">
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
             <span className="text-blue-600"><GraduationCap className="w-6 h-6" /></span> {t('education_title')}
@@ -218,7 +215,7 @@ export function About() {
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </section>
+    </article>
   );
 }

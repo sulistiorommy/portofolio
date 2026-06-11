@@ -6,7 +6,7 @@ export function Home() {
   const { t } = useAppContext();
 
   return (
-    <div className="flex flex-col justify-center min-h-[calc(100vh-6rem)] animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <section className="flex flex-col justify-center min-h-[calc(100vh-6rem)] animate-in fade-in slide-in-from-bottom-4 duration-500" aria-label="Hero">
       <div className="max-w-3xl">
         <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 dark:text-white mb-6 tracking-tight">
           {t('greeting')} <span className="text-blue-600 dark:text-blue-400">{t('fullname')}</span>
@@ -42,20 +42,20 @@ export function Home() {
         </div>
       </div>
 
-      <div className="mt-16 grid grid-cols-3 gap-6 opacity-60">
+      <section className="mt-16 grid grid-cols-3 gap-6 opacity-60" aria-label="Statistics">
         <div className="flex flex-col gap-2">
-          <span className="text-4xl font-bold text-blue-600 dark:text-blue-400">11</span>
+          <span className="text-4xl font-bold text-blue-600 dark:text-blue-400">12</span>
           <span className="text-sm font-medium text-slate-500">{t('stat_projects')}</span>
         </div>
         <div className="flex flex-col gap-2">
-          <span className="text-4xl font-bold text-blue-600 dark:text-blue-400">10</span>
+          <span className="text-4xl font-bold text-blue-600 dark:text-blue-400">11</span>
           <span className="text-sm font-medium text-slate-500">{t('stat_completed')}</span>
         </div>
         <div className="flex flex-col gap-2">
-          <span className="text-4xl font-bold text-blue-600 dark:text-blue-400">1</span>
+          <span className="text-4xl font-bold text-blue-600 dark:text-blue-400">  1</span>
           <span className="text-sm font-medium text-slate-500">{t('stat_in_progress')}</span>
         </div>
-      </div>
-    </div>
+      </section>
+    </section>
   );
 }

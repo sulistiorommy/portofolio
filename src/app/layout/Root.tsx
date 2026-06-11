@@ -14,15 +14,71 @@ const NAV_LINKS = [
   { name: "contact", path: "/contact", icon: Mail },
 ] as const;
 
+const PAGE_META: Record<string, { titleId: string; titleEn: string; descId: string; descEn: string }> = {
+  "/": {
+    titleId: "Rommy Sulistio — Junior Web Developer | Portfolio",
+    titleEn: "Rommy Sulistio — Junior Web Developer | Portfolio",
+    descId: "Portfolio Rommy Sulistio, Junior Web Developer yang berspesialisasi di React, Tailwind CSS, Node.js, dan full-stack web development modern.",
+    descEn: "Portfolio of Rommy Sulistio, Junior Web Developer specializing in React, Tailwind CSS, Node.js, and modern full-stack web development.",
+  },
+  "/about": {
+    titleId: "Tentang — Rommy Sulistio",
+    titleEn: "About — Rommy Sulistio",
+    descId: "Tentang Rommy Sulistio: pengalaman kerja, skill teknis, riwayat pendidikan, dan latar belakang unik di bidang Psikologi & Web Development.",
+    descEn: "About Rommy Sulistio: work experience, technical skills, education history, and unique background in Psychology & Web Development.",
+  },
+  "/achievements": {
+    titleId: "Pencapaian & Sertifikat — Rommy Sulistio",
+    titleEn: "Achievements & Certificates — Rommy Sulistio",
+    descId: "Koleksi sertifikasi profesional dan pencapaian Rommy Sulistio di bidang web development dari Dicoding, Progate, dan platform lainnya.",
+    descEn: "Professional certifications and achievements by Rommy Sulistio in web development from Dicoding, Progate, and other platforms.",
+  },
+  "/project": {
+    titleId: "Proyek — Rommy Sulistio",
+    titleEn: "Projects — Rommy Sulistio",
+    descId: "Showcase proyek web development oleh Rommy Sulistio: company profile, sistem manajemen, portfolio interaktif, dan lebih banyak lagi.",
+    descEn: "Web development project showcase by Rommy Sulistio: company profiles, management systems, interactive portfolios, and more.",
+  },
+  "/dashboard": {
+    titleId: "Dasbor Aktivitas — Rommy Sulistio",
+    titleEn: "Activity Dashboard — Rommy Sulistio",
+    descId: "Dashboard real-time aktivitas coding Rommy Sulistio: statistik GitHub, WakaTime coding activity, dan Umami web analytics.",
+    descEn: "Real-time coding activity dashboard: GitHub stats, WakaTime coding activity, and Umami web analytics.",
+  },
+  "/contact": {
+    titleId: "Kontak — Rommy Sulistio",
+    titleEn: "Contact — Rommy Sulistio",
+    descId: "Hubungi Rommy Sulistio untuk kolaborasi proyek, konsultasi web development, atau pertanyaan lainnya melalui formulir, email, atau WhatsApp.",
+    descEn: "Contact Rommy Sulistio for project collaboration, web development consultation, or other inquiries via form, email, or WhatsApp.",
+  },
+};
+
 export function Root() {
   const { theme, setTheme, language, setLanguage, t } = useAppContext();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const location = useLocation();
 
+  // Dynamic SEO: Update title, meta description, and html lang per page/language
   useEffect(() => {
-    const pageTitle = NAV_LINKS.find((link) => link.path === location.pathname)?.name || "Portfolio";
-    document.title = `${t(pageTitle)} | ${t('fullname')}`;
-  }, [location.pathname, language, t]);
+    const meta = PAGE_META[location.pathname] || PAGE_META["/"];
+    const isId = language === "id";
+
+    // Update page title
+    document.title = isId ? meta.titleId : meta.titleEn;
+
+    // Update meta description
+    const descMeta = document.querySelector('meta[name="description"]');
+    if (descMeta) descMeta.setAttribute("content", isId ? meta.descId : meta.descEn);
+
+    // Update html lang attribute
+    document.documentElement.lang = isId ? "id" : "en";
+
+    // Update canonical URL for SPA routing
+    let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement;
+    if (canonical) {
+      canonical.href = `https://rommysulistio.my.id${location.pathname === "/" ? "/" : location.pathname}`;
+    }
+  }, [location.pathname, language]);
 
   const toggleTheme = () => setTheme(theme === "light" ? "dark" : "light");
   const toggleLanguage = () => setLanguage(language === "id" ? "en" : "id");
@@ -81,7 +137,7 @@ export function Root() {
       </div>
 
       {/* Menu Links */}
-      <nav className="flex-1 px-4 space-y-2">
+      <nav className="flex-1 px-4 space-y-2" aria-label="Main navigation">
         {NAV_LINKS.map((link) => {
           const Icon = link.icon;
           return (
@@ -151,7 +207,7 @@ export function Root() {
         </div>
 
         {/* Outlet Content */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-8 lg:p-12 w-full max-w-5xl mx-auto">
+        <main className="flex-1 overflow-y-auto p-4 md:p-8 lg:p-12 w-full max-w-5xl mx-auto" id="main-content">
           <Outlet />
         </main>
 

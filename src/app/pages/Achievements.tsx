@@ -60,7 +60,7 @@ export function Achievements() {
   ];
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-5xl pb-10">
+    <section className="animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-5xl pb-10" aria-label="Achievements">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
         <div>
           <h1 className="text-3xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">
@@ -87,6 +87,7 @@ export function Achievements() {
                 <img 
                   src={item.image} 
                   alt={t(item.titleKey)} 
+                  loading="lazy"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
@@ -143,6 +144,6 @@ export function Achievements() {
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 }

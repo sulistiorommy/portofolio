@@ -25,6 +25,18 @@ interface ProjectItem {
 
 const PROJECTS: ProjectItem[] = [
   {
+    id: "tarot-vibe",
+    title: "Tarot Vibe - Refleksi Psikologis AI",
+    shortDescription: "Aplikasi eksplorasi sisi terdalam psikologi menggunakan metafora kartu Tarot dan analisis rasional dari Google Gemini AI.",
+    descriptionKey: "project_tarot_vibe_desc",
+    featuresKey: "project_tarot_vibe_features",
+    techKey: "project_tarot_vibe_tech_desc",
+    tech: ["Next.js", "Tailwind CSS", "Gemini AI"],
+    image: "/project/tarot_vibe.png",
+    liveUrl: "https://tarort-vibe-959934537784.asia-southeast1.run.app/",
+    githubUrl: "private",
+  },
+  {
     id: "moss-wall",
     title: "Landing Page Company Profile",
     shortDescription: "Moss Wall Property adalah sebuah landing page modern untuk perusahaan properti yang mengusung konsep green living.",
@@ -114,7 +126,7 @@ export function Project() {
   const { t } = useAppContext();
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-5xl pb-10">
+    <section className="animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-5xl pb-10" aria-label="Projects">
       <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">
         {t('project')}
       </h1>
@@ -125,11 +137,12 @@ export function Project() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {PROJECTS.map((project) => (
           <Dialog key={project.id}>
-            <div className="group flex flex-col bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-800 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+            <article className="group flex flex-col bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-800 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
               <div className="relative h-48 overflow-hidden bg-slate-100 dark:bg-slate-800">
                 <img
                   src={project.image}
                   alt={project.title}
+                  loading="lazy"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
@@ -161,7 +174,7 @@ export function Project() {
 
                 <ProjectLinks project={project} />
               </div>
-            </div>
+            </article>
 
             <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
@@ -238,6 +251,6 @@ export function Project() {
           </Dialog>
         ))}
       </div>
-    </div>
+    </section>
   );
 }

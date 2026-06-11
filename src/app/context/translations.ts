@@ -35,6 +35,12 @@ export const translations: Record<Language, Record<string, string>> = {
     project_desc_label: "Deskripsi Singkat",
     project_features_label: "Fitur Utama",
     project_tech_label: "Teknologi & Lingkungan",
+    project_tarot_vibe_desc:
+      "Tarot Vibe adalah aplikasi web interaktif yang memadukan elemen mistis kartu Tarot dengan analisis rasional kecerdasan buatan dari Google Gemini AI. Proyek ini dibuat khusus untuk kampanye #JuaraVibeCoding, memberikan pengguna eksplorasi mendalam terkait sisi psikologis mereka melalui antarmuka yang misterius namun modern.",
+    project_tarot_vibe_features:
+      "Analisis Psikologis AI, Metafora Kartu Tarot, Animasi Halus & Interaktif, Desain Antarmuka Mystical UI/UX, Responsif di Semua Perangkat, Integrasi Google Gemini API",
+    project_tarot_vibe_tech_desc:
+      "React & Next.js sebagai fondasi utama untuk performa optimal. Tailwind CSS digunakan untuk memberikan tampilan desain dengan tema dark mode yang elegan dan sentuhan mistis (warna ungu dan amber). Google Gemini AI terintegrasi untuk memberikan analisis komprehensif. Framer Motion untuk animasi kartu dan interaksi yang seamless.",
     project_moss_wall_desc:
       "Moss Wall Property adalah sebuah landing page modern untuk perusahaan properti yang mengusung konsep green living (hunian hijau) dan desain minimalis. Website ini dirancang untuk menampilkan profil perusahaan, layanan utama, portofolio proyek, serta menyediakan saluran komunikasi yang mudah bagi calon pembeli.",
     project_moss_wall_features:
@@ -184,6 +190,12 @@ export const translations: Record<Language, Record<string, string>> = {
     project_desc_label: "Brief Description",
     project_features_label: "Key Features",
     project_tech_label: "Technology & Environment",
+    project_tarot_vibe_desc:
+      "Tarot Vibe is an interactive web application that combines the mystical elements of Tarot cards with the rational analysis of Google Gemini AI. Specially created for the #JuaraVibeCoding campaign, this project offers users deep psychological exploration through a mysterious yet modern interface.",
+    project_tarot_vibe_features:
+      "AI Psychological Analysis, Tarot Card Metaphors, Smooth & Interactive Animations, Mystical UI/UX Design, Fully Responsive, Google Gemini API Integration",
+    project_tarot_vibe_tech_desc:
+      "React & Next.js as the core foundation for optimal performance. Tailwind CSS used for elegant dark mode styling with mystical touches (deep purple and amber accents). Google Gemini AI integrated to provide comprehensive analysis. Framer Motion for card animations and seamless interactions.",
     project_moss_wall_desc:
       "Moss Wall Property is a modern landing page for a real estate company that embraces the green living concept and minimalist design. This website is designed to showcase company profile, core services, project portfolio, and provide easy communication channels for potential buyers.",
     project_moss_wall_features:
