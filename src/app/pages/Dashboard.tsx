@@ -233,17 +233,18 @@ export function Dashboard() {
           </div>
         </div>
 
-        {umamiStats?.error === "API_KEY_INVALID" && (
-          <div className="p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-2xl text-amber-700 dark:text-amber-400 text-sm">
-            <p className="font-bold flex items-center gap-2">
-              ⚠️ Konfigurasi Umami Belum Sesuai
-            </p>
-            <p className="mt-1">
-              API Key di file <code className="bg-amber-100 dark:bg-amber-800 px-1 rounded">.env</code> tidak valid atau belum disetel. Mohon periksa kembali tutorial di atas.
+        {umamiStats?.error ? (
+          <div className="p-8 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-3xl text-center flex flex-col items-center justify-center min-h-[300px]">
+            <Activity className="w-12 h-12 mb-4 text-slate-300 dark:text-slate-600" />
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Data Analitik Tidak Tersedia</h3>
+            <p className="text-slate-500 dark:text-slate-400 max-w-md mx-auto">
+              {umamiStats.error === "API_KEY_INVALID"
+                ? "API Key tidak valid atau belum disetel. Mohon periksa kembali konfigurasi Umami Anda."
+                : "Terjadi kesalahan pada server atau server sedang sibuk. Silakan coba beberapa saat lagi."}
             </p>
           </div>
-        )}
-
+        ) : (
+          <>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
             {
@@ -480,6 +481,8 @@ export function Dashboard() {
             </div>
           </motion.div>
         </div>
+        </>
+        )}
       </div>
 
       {/* GitHub Section */}

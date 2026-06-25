@@ -13,6 +13,51 @@ export function Achievements() {
 
   const achievements = [
     {
+      titleKey: "cert_jvc_title",
+      organization: "Google Developer Group",
+      year: "2026",
+      image: "/certificates/Rommy Sulistio_Certificate JVC.webp",
+      descriptionKey: "cert_jvc_desc",
+      color: "text-indigo-500",
+      bgColor: "bg-indigo-50 dark:bg-indigo-900/30"
+    },
+    {
+      titleKey: "cert_react_basic_title",
+      organization: "Dicoding Academy",
+      year: "2025",
+      image: "/certificates/Belajar_Membuat_Aplikasi_Web_dengan_React.webp",
+      descriptionKey: "cert_react_basic_desc",
+      color: "text-cyan-500",
+      bgColor: "bg-cyan-50 dark:bg-cyan-900/30"
+    },
+    {
+      titleKey: "cert_frontend_basic_title",
+      organization: "Dicoding Academy",
+      year: "2025",
+      image: "/certificates/Belajar_Membuat_Front-End_Web_untuk Pemula.webp",
+      descriptionKey: "cert_frontend_basic_desc",
+      color: "text-teal-500",
+      bgColor: "bg-teal-50 dark:bg-teal-900/30"
+    },
+    {
+      titleKey: "cert_js_basic_title",
+      organization: "Dicoding Academy",
+      year: "2025",
+      image: "/certificates/Belajar_Dasar_Pemrograman_JavaScript.webp",
+      descriptionKey: "cert_js_basic_desc",
+      color: "text-yellow-600",
+      bgColor: "bg-yellow-50 dark:bg-yellow-900/30"
+    },
+    {
+      titleKey: "cert_self_dev_title",
+      organization: "MySkill",
+      year: "2025",
+      image: "/certificates/Belajar_Strategi_Pengembangan_Diri.webp",
+      descriptionKey: "cert_self_dev_desc",
+      color: "text-fuchsia-500",
+      bgColor: "bg-fuchsia-50 dark:bg-fuchsia-900/30"
+    },
+    {
       titleKey: "cert_web_basic_title",
       organization: "Dicoding Academy",
       year: "2024",
@@ -23,7 +68,7 @@ export function Achievements() {
     },
     {
       titleKey: "cert_js_logic_title",
-      organization: "Progate",
+      organization: "MySkill",
       year: "2024",
       image: "/certificates/COMPARISON_AND_LOGICAL_OPERATORS.PNG",
       descriptionKey: "cert_js_logic_desc",
@@ -32,7 +77,7 @@ export function Achievements() {
     },
     {
       titleKey: "cert_js_branch_title",
-      organization: "Progate",
+      organization: "MySkill",
       year: "2024",
       image: "/certificates/CONDITIONAL_BRANCHING_AND_SWITCH_STATEMENT.PNG",
       descriptionKey: "cert_js_branch_desc",
@@ -41,7 +86,7 @@ export function Achievements() {
     },
     {
       titleKey: "cert_js_datatype_title",
-      organization: "Progate",
+      organization: "MySkill",
       year: "2024",
       image: "/certificates/DATA _TYPE_AND_OPERATOR.PNG",
       descriptionKey: "cert_js_datatype_desc",
@@ -50,7 +95,7 @@ export function Achievements() {
     },
     {
       titleKey: "cert_js_obj_array_title",
-      organization: "Progate",
+      organization: "MySkill",
       year: "2024",
       image: "/certificates/OBJECT_AND_ARRAY.PNG",
       descriptionKey: "cert_js_obj_array_desc",

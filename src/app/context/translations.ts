@@ -82,6 +82,21 @@ export const translations: Record<Language, Record<string, string>> = {
     cert_js_obj_array_title: "Object and Array",
     cert_js_obj_array_desc:
       "Mempelajari cara mengelola kumpulan data kompleks menggunakan objek dan array untuk struktur data yang lebih efisien.",
+    cert_js_basic_title: "Belajar Dasar Pemrograman JavaScript",
+    cert_js_basic_desc:
+      "Sertifikat dasar yang mencakup konsep fundamental JavaScript seperti sintaks dasar, fungsi, dan manipulasi DOM.",
+    cert_react_basic_title: "Belajar Membuat Aplikasi Web dengan React",
+    cert_react_basic_desc:
+      "Pemahaman fundamental tentang pengembangan antarmuka pengguna berbasis komponen menggunakan pustaka React.",
+    cert_frontend_basic_title: "Belajar Membuat Front-End Web untuk Pemula",
+    cert_frontend_basic_desc:
+      "Sertifikat komprehensif dalam membangun antarmuka web modern dengan HTML, CSS, dan JavaScript dasar.",
+    cert_self_dev_title: "Belajar Strategi Pengembangan Diri",
+    cert_self_dev_desc:
+      "Pemahaman mengenai manajemen waktu, goal setting, dan strategi komunikasi untuk pertumbuhan karir profesional.",
+    cert_jvc_title: "#JuaraVibeCoding",
+    cert_jvc_desc:
+      "Sertifikat pencapaian dalam ajang #JuaraVibeCoding yang diselenggarakan oleh Google Developer Group (GDG), memvalidasi kemampuan dalam membangun aplikasi web modern secara utuh dengan memanfaatkan teknologi kecerdasan buatan (Full AI).",
 
     // Experience
     experience_title: "Pengalaman Kerja",
@@ -237,6 +252,21 @@ export const translations: Record<Language, Record<string, string>> = {
     cert_js_obj_array_title: "Object and Array",
     cert_js_obj_array_desc:
       "Learn how to manage complex data collections using objects and arrays for more efficient data structures.",
+    cert_js_basic_title: "Basic JavaScript Programming",
+    cert_js_basic_desc:
+      "Basic certificate covering fundamental JavaScript concepts such as basic syntax, functions, and DOM manipulation.",
+    cert_react_basic_title: "Learning to Build Web Applications with React",
+    cert_react_basic_desc:
+      "Fundamental understanding of component-based user interface development using the React library.",
+    cert_frontend_basic_title: "Learning to Build Front-End Web for Beginners",
+    cert_frontend_basic_desc:
+      "Comprehensive certificate in building modern web interfaces with HTML, CSS, and basic JavaScript.",
+    cert_self_dev_title: "Learning Self-Development Strategies",
+    cert_self_dev_desc:
+      "Understanding time management, goal setting, and communication strategies for professional career growth.",
+    cert_jvc_title: "#JuaraVibeCoding",
+    cert_jvc_desc:
+      "Certificate of achievement in the #JuaraVibeCoding event hosted by Google Developer Group (GDG), validating the ability to build complete modern web applications by fully leveraging artificial intelligence (Full AI) technologies.",
 
     // Experience
     experience_title: "Work Experience",
